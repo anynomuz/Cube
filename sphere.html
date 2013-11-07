@@ -38,7 +38,7 @@
 
 			// camera
 
-			camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 5, 10000);
+			camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 5, 3000);
 			camera.position.z = 1500;
 
 			// trackball
@@ -49,8 +49,11 @@
 			controls.zoomSpeed = 1.2;
 			controls.panSpeed = 0.8;
 
+			controls.minDistance = camera.near;
+			controls.maxDistance = camera.far - 500;
+
 			controls.noZoom = false;
-			controls.noPan = false;
+			controls.noPan = true;
 
 			controls.staticMoving = true;
 			controls.dynamicDampingFactor = 0.3;
@@ -62,44 +65,14 @@
 		    // scene
 
 			scene = new THREE.Scene();
-			//scene.fog = new THREE.Fog(0x0000cc);
+			scene.fog = new THREE.Fog(0x0000cc);
 
-			ambientLight = new THREE.AmbientLight(0x0f0f0f);
+			ambientLight = new THREE.AmbientLight(0xcccccc);
 		    scene.add(ambientLight);
-
-			//var directionalLight = new THREE.DirectionalLight(0x0f0f0f);
-			//directionalLight.position.set(0, 0, 1000).normalize();
-			//scene.add(directionalLight);
 
 		    // add sphere 
 
-			var sphereGeometry = new THREE.SphereGeometry(20, 16, 16);
-			var sphereMaterial = new THREE.MeshLambertMaterial({ color: 0x0000ff });
-
-			var radius = 20;
-			var distance = 100;
-			var dimention = 4;
-
-			var spherePosition;
-
-			var halfSize = (distance * (dimention - 1)) / 2;
-
-			for (i = 0; i < dimention; ++i) {
-
-			    for (j = 0; j < dimention; ++j) {
-
-			        for (k = 0; k < dimention; ++k) {
-
-			            spherePosition = new THREE.Vector3(
-                            (i * distance) - halfSize,
-                            (j * distance) - halfSize,
-                            (k * distance) - halfSize);
-
-			            addSphere(spherePosition);
-			            addPointLigth(0x0000ff, spherePosition);
-			        }
-			    }
-			}
+		    buildCube(8, 100, 15);
 
 		    // renderer
 
@@ -114,20 +87,38 @@
 
 			animate();
 
+			function buildCube(dimention, distance, radius)
+			{
+			    var sphereGeometry = new THREE.SphereGeometry(radius, 16, 16);
+			    var sphereMaterial = new THREE.MeshLambertMaterial({ color: 0x0000ff });
 
-			function addSphere(position) {
+			    var halfSize = (distance * (dimention - 1)) / 2;
 
-			    var sphere = new THREE.Mesh(
-                   sphereGeometry,
-                   sphereMaterial);
+			    for (i = 0; i < dimention; ++i) {
 
-			    sphere.position = position;
+			        for (j = 0; j < dimention; ++j) {
 
-			    sphere.updateMatrix();
-			    sphere.matrixAutoUpdate = false;
+			            for (k = 0; k < dimention; ++k) {
 
-			    scene.add(sphere);
+			                var sphere = new THREE.Mesh(
+                                sphereGeometry,
+                                sphereMaterial);
+
+			                sphere.position.x = (i * distance) - halfSize;
+			                sphere.position.y = (j * distance) - halfSize;
+			                sphere.position.z = (k * distance) - halfSize;
+
+			                sphere.updateMatrix();
+			                sphere.matrixAutoUpdate = false;
+
+			                scene.add(sphere);
+
+			                //addPointLigth(0x0000ff, sphere.position);
+			            }
+			        }
+			    }
 			}
+
 
 			function addPointLigth(color, position) {
 
