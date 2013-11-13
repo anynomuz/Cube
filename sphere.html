@@ -87,6 +87,53 @@
 
 			animate();
 
+
+			function buildCube2(dimention, distance, radius) {
+
+			    var geometry = new THREE.BufferGeometry();
+
+			    count = dimention ^ 3;
+
+			    geometry.addAttribute('position', Float32Array, count, 3);
+			    geometry.addAttribute('color', Float32Array, count, 3);
+
+			    var positions = geometry.attributes.position.array;
+			    var colors = geometry.attributes.color.array;
+
+			    //var sphereGeometry = new THREE.SphereGeometry(radius, 16, 16);
+			    //var sphereMaterial = new THREE.MeshLambertMaterial({ color: 0x0000ff });
+
+			    var halfSize = (distance * (dimention - 1)) / 2;
+
+			    var baseIndex;
+
+			    for (i = 0; i < dimention; ++i) {
+
+			        for (j = 0; j < dimention; ++j) {
+
+			            for (k = 0; k < dimention; ++k) {
+
+			                baseIndex = i * dimention + j * dimention + k * dimention;
+
+			                positions[baseIndex] = (i * distance) - halfSize;
+			                positions[baseIndex + 1] = (j * distance) - halfSize;
+			                positions[baseIndex + 2] = (k * distance) - halfSize;
+
+			                //sphere.position.x = (i * distance) - halfSize;
+			                //sphere.position.y = (j * distance) - halfSize;
+			                //sphere.position.z = (k * distance) - halfSize;
+
+			                //sphere.updateMatrix();
+			                //sphere.matrixAutoUpdate = false;
+
+			                //scene.add(sphere);
+
+			                //addPointLigth(0x0000ff, sphere.position);
+			            }
+			        }
+			    }
+			}
+
 			function buildCube(dimention, distance, radius)
 			{
 			    var sphereGeometry = new THREE.SphereGeometry(radius, 16, 16);

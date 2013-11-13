@@ -46,7 +46,7 @@
 
 			var camera, scene, renderer;
 
-			var mesh;
+			var mesh, cube;
 
 			init();
 			animate();
@@ -54,9 +54,8 @@
 			function init() {
 
 			    //
-				camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 5, 3500);
+				camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 5, 4000);
 				camera.position.z = 2500;
-
 
 			    // trackball
 
@@ -67,7 +66,7 @@
 				controls.panSpeed = 0.8;
 
 				controls.minDistance = camera.near;
-				controls.maxDistance = camera.far - 500;
+				controls.maxDistance = camera.far - 1000;
 
 				controls.noZoom = false;
 				controls.noPan = true;
@@ -81,7 +80,7 @@
 
 
 				scene = new THREE.Scene();
-				//scene.fog = new THREE.Fog(0x0, 2000, 3500);
+				scene.fog = new THREE.Fog(0x0, 3000, 4000);
 
 				var directionalLight = new THREE.DirectionalLight(0x0f0f0f);
   		 		directionalLight.position.set(0, 0, 1000).normalize();
@@ -91,7 +90,7 @@
 
 				//
 
-				var particles = 5000;
+				var particles = 1000;
 
 				var geometry = new THREE.BufferGeometry();
 
@@ -105,7 +104,7 @@
 
 				var n = 1000, n2 = n/2; // particles spread in the cube
 
-				for (var i = 0; i < positions.length; i += 9) {
+				for (var i = 0; i < positions.length; i += 3) {
 
 					// positions
 
@@ -140,7 +139,16 @@
 				particleSystem = new THREE.ParticleSystem(geometry, material);
 				scene.add(particleSystem);
 
-				//
+			    // cube frames
+
+				var cubeGeometry = new THREE.CubeGeometry(n, n, n);
+				cube = new THREE.Mesh(
+                    cubeGeometry,
+                    new THREE.MeshBasicMaterial({ wireframe: true }))
+
+				scene.add(cube);
+
+                //
 
 				renderer = new THREE.WebGLRenderer( { antialias: false, alpha: false } );
 				renderer.setClearColor(0x0, 1);
@@ -183,6 +191,9 @@
 
 				particleSystem.rotation.x = time * 0;
 				particleSystem.rotation.y = time * -0.5;
+
+				cube.rotation.x = particleSystem.rotation.x;
+				cube.rotation.y = particleSystem.rotation.y;
 
 				renderer.render(scene, camera);
 			}
